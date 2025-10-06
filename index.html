@@ -107,7 +107,7 @@ require([
 
   document.getElementById('sendDataBtn').addEventListener('click',()=>{
     if(localRecords.length===0){ alert('لا توجد سجلات لإرسالها'); return; }
-    const scriptURL = 'https://script.google.com/macros/s/XXXXX/exec'; // ضع رابط Web App هنا
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbytnfOMC0zuIupTZ1oGqrPwREtC7FPNnp2DCPu8-mkHQ4xgDxduSra-Ask2zzDpH4IB6w/exec';
     fetch(scriptURL, { 
       method:'POST', 
       headers: {'Content-Type':'application/json'},
@@ -138,3 +138,4 @@ require([
 </script>
 </body>
 </html>
+
