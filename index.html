@@ -24,7 +24,7 @@
 </head>
 <body>
 <div id="viewDiv"></div>
-<button id="myLocationBtn" title="Go to my location">📍</button>
+<button id="myLocationBtn" title="اذهب إلى موقعي">📍</button>
 
 <div id="buttonsContainer">
   <button id="sendDataBtn" class="action-button">إرسال البيانات</button>
@@ -105,26 +105,17 @@ require([
     } else alert('Geolocation not supported');
   });
 
-  document.getElementById('sendDataBtn').addEventListener('click', ()=>{
-  if(localRecords.length === 0){
-    alert('لا توجد سجلات لإرسالها');
-    return;
-  }
-
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbytnfOMC0zuIupTZ1oGqrPwREtC7FPNnp2DCPu8-mkHQ4xgDxduSra-Ask2zzDpH4IB6w/exec';
-
-  fetch(scriptURL, { 
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(localRecords)
-  })
-  .then(res => res.json())
-  .then(data => alert('تم الإرسال: ' + data.message))
-  .catch(err => alert('خطأ أثناء الإرسال: ' + err));
-});
-.then(res => res.json())
-.then(data => alert('تم الإرسال: ' + data.message))
-.catch(err => alert('خطأ أثناء الإرسال: ' + err));
+  document.getElementById('sendDataBtn').addEventListener('click',()=>{
+    if(localRecords.length===0){ alert('لا توجد سجلات لإرسالها'); return; }
+    const scriptURL = 'https://script.google.com/macros/s/XXXXX/exec'; // ضع رابط Web App هنا
+    fetch(scriptURL, { 
+      method:'POST', 
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(localRecords)
+    })
+    .then(res => res.json())
+    .then(data => alert('تم الإرسال: ' + data.message))
+    .catch(err => alert('خطأ أثناء الإرسال: ' + err));
   });
 
   document.getElementById('clearDataBtn').addEventListener('click',()=>{
@@ -147,7 +138,3 @@ require([
 </script>
 </body>
 </html>
-
-
-
-
