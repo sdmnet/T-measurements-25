@@ -7,45 +7,44 @@
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
 <script src="https://js.arcgis.com/4.29/"></script>
 <style>
-html, body, #viewDiv { height: 100%; margin:0; padding:0; font-family: sans-serif; }
+  html, body, #viewDiv { height: 100%; margin:0; padding:0; font-family: sans-serif; }
 
-#buttonsContainer {
-  position: absolute; bottom: 80px; left: 10px;
-  display: flex; flex-direction: column; gap: 10px; z-index: 99;
-}
+  #buttonsContainer {
+    position: absolute; bottom: 60px; left: 10px;
+    display: flex; flex-direction: column; gap: 8px; z-index: 99;
+  }
 
-.action-button {
-  background-color: #0078d4; border: none; color: white;
-  padding: 10px 18px; font-size: 14px; border-radius: 8px; cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s;
-}
-.action-button:hover { background-color: #005ea0; }
-.delete-button { background-color: #e63946; }
-.delete-button:hover { background-color: #c1121f; }
+  .action-button {
+    background-color: #0078d4; border: none; color: white;
+    padding: 10px 18px; font-size: 14px; border-radius: 8px; cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s;
+  }
+  .action-button:hover { background-color: #005ea0; }
+  .delete-button { background-color: #e63946; }
+  .delete-button:hover { background-color: #c1121f; }
 
-#myLocationBtn {
-  position: absolute; top: 15px; right: 15px; background:white; border:1px solid #ccc;
-  border-radius:50%; width:40px; height:40px; cursor:pointer;
-  box-shadow:0 2px 5px rgba(0,0,0,0.3); z-index:99; display:flex; align-items:center; justify-content:center;
-}
-#myLocationBtn:hover { background-color: #e8f0fe; }
+  #myLocationBtn {
+    position: absolute; top: 15px; right: 15px; background:white; border:1px solid #ccc;
+    border-radius:50%; width:40px; height:40px; cursor:pointer;
+    box-shadow:0 2px 5px rgba(0,0,0,0.3); z-index:99; display:flex; align-items:center; justify-content:center;
+  }
+  #myLocationBtn:hover { background-color: #e8f0fe; }
 
-#recordsTableContainer {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 90%; max-height: 150px; overflow-y: auto; background: rgba(255,255,255,0.95);
-  border-top-left-radius:8px; border-top-right-radius:8px; box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
-  font-size:13px; z-index: 99;
-  transition: max-height 0.3s ease-in-out;
-}
+  #recordsTableContainer {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 90%; max-height: 150px; overflow-y: auto; background: rgba(255,255,255,0.95);
+    border-top-left-radius:8px; border-top-right-radius:8px; box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+    font-size:13px; z-index: 99;
+  }
 
-#recordsTableHeader {
-  display: flex; justify-content: space-between; align-items: center;
-  background-color: #f0f0f0; padding: 4px 10px; cursor: pointer;
-}
+  #recordsTableHeader {
+    cursor: pointer; background:#ddd; padding:4px; text-align:center;
+  }
 
-#recordsTable { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #ccc; padding: 4px 6px; text-align:center; }
-th { background-color: #f0f0f0; font-weight:600; }
+  #recordsTableContainer table { width: 100%; border-collapse: collapse; }
+  #recordsTableContainer th, td { border: 1px solid #ccc; padding: 4px 6px; text-align:center; }
+  #recordsTableContainer th { background-color: #f0f0f0; font-weight:600; }
+
 </style>
 </head>
 <body>
@@ -58,7 +57,7 @@ th { background-color: #f0f0f0; font-weight:600; }
 </div>
 
 <div id="recordsTableContainer">
-  <div id="recordsTableHeader">السجلات <span id="toggleTableBtn">▼</span></div>
+  <div id="recordsTableHeader">سجلات القياسات (اضغط للطي/التوسيع)</div>
   <table id="recordsTable">
     <thead>
       <tr><th>ID</th><th>نوع</th><th>مساحة (هكتار)</th><th>إحداثيات</th></tr>
@@ -110,6 +109,7 @@ require([
       const geom = event.graphic.geometry;
       let areaHectares=null;
       if(geom.type==='polygon') areaHectares = geometryEngine.geodesicArea(geom,'square-meters')/10000.0;
+
       const rec={ id: generateId(), type:geom.type, coords:serializeGeometry(geom), area_ha: areaHectares, timestamp: new Date().toISOString() };
       localRecords.push(rec);
       refreshTable();
@@ -129,15 +129,15 @@ require([
 
   document.getElementById('sendDataBtn').addEventListener('click',()=>{
     if(localRecords.length===0){ alert('لا توجد سجلات لإرسالها'); return; }
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbytnfOMC0zuIupTZ1oGqrPwREtC7FPNnp2DCPu8-mkHQ4xgDxduSra-Ask2zzDpH4IB6w/exec';
-    ffetch(scriptURL, { 
-  method:'POST', 
-  body: JSON.stringify(localRecords),
-  headers: {'Content-Type':'application/json'},
-  mode: 'no-cors'
-})
-.then(()=>alert('تم إرسال البيانات بنجاح'))
-.catch(err => alert('خطأ أثناء الإرسال: ' + err));
+    const scriptURL = 'https://script.google.com/macros/s/xxxxxxxxxxx/exec'; // ضع رابط السكربت هنا
+    fetch(scriptURL, { 
+      method:'POST', 
+      body: JSON.stringify(localRecords),
+      headers: {'Content-Type':'application/json'},
+      mode: 'no-cors'
+    })
+    .then(()=>alert('تم إرسال البيانات بنجاح'))
+    .catch(err => alert('خطأ أثناء الإرسال: ' + err));
   });
 
   document.getElementById('clearDataBtn').addEventListener('click',()=>{
@@ -148,20 +148,13 @@ require([
     }
   });
 
-  // Toggle table
+  // Toggle table collapse
   const tableContainer = document.getElementById('recordsTableContainer');
-  const toggleBtn = document.getElementById('toggleTableBtn');
-  let tableOpen = true;
-  toggleBtn.addEventListener('click', ()=>{
-    if(tableOpen){
-      tableContainer.style.maxHeight = '25px';
-      toggleBtn.textContent = '▲';
-      tableOpen = false;
-    } else {
-      tableContainer.style.maxHeight = '150px';
-      toggleBtn.textContent = '▼';
-      tableOpen = true;
-    }
+  const tableHeader = document.getElementById('recordsTableHeader');
+  let collapsed=false;
+  tableHeader.addEventListener('click',()=>{
+    collapsed = !collapsed;
+    tableBody.parentElement.style.display = collapsed ? 'none' : 'table';
   });
 
 });
