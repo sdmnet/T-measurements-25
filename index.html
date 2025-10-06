@@ -7,19 +7,19 @@
 <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
 <script src="https://js.arcgis.com/4.29/"></script>
 <style>
-  html, body, #viewDiv { height: 100%; margin:0; padding:0; font-family: sans-serif; }
-  #buttonsContainer { position: absolute; bottom: 60px; left: 10px; display: flex; flex-direction: column; gap: 8px; z-index: 99; }
-  .action-button { background-color: #0078d4; border: none; color: white; padding: 10px 18px; font-size: 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s; }
-  .action-button:hover { background-color: #005ea0; }
-  .delete-button { background-color: #e63946; }
-  .delete-button:hover { background-color: #c1121f; }
-  #myLocationBtn { position: absolute; top: 15px; right: 15px; background:white; border:1px solid #ccc; border-radius:50%; width:40px; height:40px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.3); z-index:99; display:flex; align-items:center; justify-content:center; }
-  #myLocationBtn:hover { background-color: #e8f0fe; }
-  #recordsTableContainer { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 90%; max-height: 150px; overflow-y: auto; background: rgba(255,255,255,0.95); border-top-left-radius:8px; border-top-right-radius:8px; box-shadow: 0 -2px 6px rgba(0,0,0,0.2); font-size:13px; z-index: 99; }
-  #recordsTableHeader { cursor: pointer; background:#ddd; padding:4px; text-align:center; }
-  #recordsTableContainer table { width: 100%; border-collapse: collapse; }
-  #recordsTableContainer th, td { border: 1px solid #ccc; padding: 4px 6px; text-align:center; }
-  #recordsTableContainer th { background-color: #f0f0f0; font-weight:600; }
+html, body, #viewDiv { height: 100%; margin:0; padding:0; font-family: sans-serif; }
+#buttonsContainer { position: absolute; bottom: 60px; left: 10px; display: flex; flex-direction: column; gap: 8px; z-index: 99; }
+.action-button { background-color: #0078d4; border: none; color: white; padding: 10px 18px; font-size: 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: 0.3s; }
+.action-button:hover { background-color: #005ea0; }
+.delete-button { background-color: #e63946; }
+.delete-button:hover { background-color: #c1121f; }
+#myLocationBtn { position: absolute; top: 15px; right: 15px; background:white; border:1px solid #ccc; border-radius:50%; width:40px; height:40px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.3); z-index:99; display:flex; align-items:center; justify-content:center; }
+#myLocationBtn:hover { background-color: #e8f0fe; }
+#recordsTableContainer { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 90%; max-height: 150px; overflow-y: auto; background: rgba(255,255,255,0.95); border-top-left-radius:8px; border-top-right-radius:8px; box-shadow: 0 -2px 6px rgba(0,0,0,0.2); font-size:13px; z-index: 99; }
+#recordsTableHeader { cursor: pointer; background:#ddd; padding:4px; text-align:center; }
+#recordsTableContainer table { width: 100%; border-collapse: collapse; }
+#recordsTableContainer th, td { border: 1px solid #ccc; padding: 4px 6px; text-align:center; }
+#recordsTableContainer th { background-color: #f0f0f0; font-weight:600; }
 </style>
 </head>
 <body>
@@ -105,23 +105,20 @@ require([
     } else alert('Geolocation not supported');
   });
 
-  document.getElementById('sendDataBtn').addEventListener('click', ()=>{
-  if(localRecords.length===0){
-    alert('لا توجد سجلات لإرسالها');
-    return;
-  }
+  document.getElementById('sendDataBtn').addEventListener('click',()=>{
+    if(localRecords.length===0){ alert('لا توجد سجلات لإرسالها'); return; }
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw_vpZoUEhjsqm_WnJYLiQ20UufX07UquVS20SKe6E91ZuTbilNr5u1fFY1-eTB8TizCQ/exec';
+    
+    fetch(scriptURL, { 
+      method:'POST', 
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(localRecords)
+    })
+    .then(res => res.json())
+    .then(data => alert('تم الإرسال: ' + data.message))
+    .catch(err => alert('خطأ أثناء الإرسال: ' + err));
+  });
 
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbytnfOMC0zuIupTZ1oGqrPwREtC7FPNnp2DCPu8-mkHQ4xgDxduSra-Ask2zzDpH4IB6w/exec';
-
-  fetch(scriptURL, { 
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(localRecords)
-  })
-  .then(res => res.json())
-  .then(data => alert('تم الإرسال: ' + data.message))
-  .catch(err => alert('خطأ أثناء الإرسال: ' + err));
-});
   document.getElementById('clearDataBtn').addEventListener('click',()=>{
     if(confirm('مسح كافة السجلات؟')){
       gLayer.removeAll();
@@ -142,4 +139,3 @@ require([
 </script>
 </body>
 </html>
-
