@@ -105,19 +105,31 @@ require([
     } else alert('Geolocation not supported');
   });
 
-  document.getElementById('sendDataBtn').addEventListener('click',()=>{
-    if(localRecords.length===0){ alert('لا توجد سجلات لإرسالها'); return; }
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbywNhd0Q3eNNp02BNzbI4TSKm5mj4tKQjXP8wpvwU2dMjtDCYqsR-si3F1tVBWeOdnX/exec';
-    
-    fetch(scriptURL, { 
-      method:'POST', 
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(localRecords)
-    })
-    .then(res => res.json())
-    .then(data => alert('تم الإرسال: ' + data.message))
-    .catch(err => alert('خطأ أثناء الإرسال: ' + err));
-  });
+ document.getElementById('sendDataBtn').addEventListener('click', async () => {
+  if (localRecords.length === 0) { alert('لا توجد سجلات لإرسالها'); return; }
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbywNhd0Q3eNNp02BNzbI4TSKm5mj4tKQjXP8wpvwU2dMjtDCYqsR-si3F1tVBWeOdnX/exec';
+
+  // ضع هنا رمز تحقق بسيط إن أردت، لتقليل الإساءة
+  const TOKEN = 'my_secret_token_123'; // غَيِّرها لقيمة قوية
+
+  const form = new FormData();
+  form.append('records', JSON.stringify(localRecords));
+  form.append('token', TOKEN);
+
+  try {
+    const resp = await fetch(scriptURL, {
+      method: 'POST',
+      body: form // لا تضف أي رؤوس Content-Type يدوياً
+    });
+
+    // تحصيل الاستجابة كـ JSON
+    const data = await resp.json();
+    alert('تم الإرسال: ' + (data.message || JSON.stringify(data)));
+  } catch (err) {
+    alert('خطأ أثناء الإرسال: ' + err);
+    console.error(err);
+  }
+});
 
   document.getElementById('clearDataBtn').addEventListener('click',()=>{
     if(confirm('مسح كافة السجلات؟')){
@@ -139,6 +151,7 @@ require([
 </script>
 </body>
 </html>
+
 
 
 
