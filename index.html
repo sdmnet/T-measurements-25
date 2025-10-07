@@ -107,7 +107,7 @@ require([
 
   document.getElementById('sendDataBtn').addEventListener('click',()=>{
     if(localRecords.length===0){ alert('لا توجد سجلات لإرسالها'); return; }
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw_vpZoUEhjsqm_WnJYLiQ20UufX07UquVS20SKe6E91ZuTbilNr5u1fFY1-eTB8TizCQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbySQH_U5ygpelW9GWrICoSWhxW-jTt7etz5BAQuNyh1gvDRLxaLEwiSqWU8msYrp4mh/exec';
     
     fetch(scriptURL, { 
       method:'POST', 
@@ -139,3 +139,4 @@ require([
 </script>
 </body>
 </html>
+
